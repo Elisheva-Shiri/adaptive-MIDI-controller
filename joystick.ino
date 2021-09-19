@@ -1,24 +1,28 @@
-int xValue = 0 ;
-int yValue = 0 ; 
-int bValue = 0 ;
+// Analog input of the horizontal joystick position
+const int JoystickX = A0;
+const int JoystickY = A1;
 
-void setup()  
-{ 
-  Serial.begin(9600) ;
-  pinMode(8,INPUT); 
-  digitalWrite(8,HIGH); 
-} 
+void setup()
+{
+  Serial.begin(9600); 
+  pinMode(JoystickX, INPUT);
+  pinMode(JoystickY, INPUT);
+}
 
-void loop() 
-{ 
-  xValue = analogRead(A0);  
-  yValue = analogRead(A1);  
-  bValue = digitalRead(8);  
-  Serial.print(xValue,DEC);
-  Serial.print(",");
-  Serial.print(yValue,DEC);
-  Serial.print(",");
-  Serial.print(!bValue);
-  Serial.print("\n");
-  delay(1000);  
+void loop()
+{
+  // Process horizontal joystick position
+  int x = analogRead(JoystickX);
+  int y = analogRead(JoystickY);
+  
+  if (x > 700 || y>700)
+    Serial.println("Up");
+
+  else if (x < 300 || y<300)
+    Serial.println("down");
+
+  else
+    Serial.println("middle");
+
+   delay(1000);
 }
