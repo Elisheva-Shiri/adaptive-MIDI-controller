@@ -225,25 +225,27 @@ void potentiometers() {
     if (potMoving == true) { // If the potentiometer is still moving, send the change control
       if (midiPotPState[i] != midiPotCState[i]) {
 
+        int midi_out_value = 127 - midiPotCState[i];
+
         // Sends the MIDI CC accordingly to the chosen board
         // use if using with ATmega328 (uno, mega, nano...)
         #ifdef ATMEGA328
-        midiOut.sendControlChange(cc + i, midiPotCState[i], midiCh); // cc number, cc value, midi channel
+        midiOut.sendControlChange(cc + i, midi_out_value, midiCh); // cc number, cc value, midi channel
         
         //use if using with ATmega32U4 (micro, pro micro, leonardo...)
         #elif ATMEGA32U4
-        controlChange(midiCh, cc + i, midiPotCState[i]); //  (channel, CC number,  CC value)
+        controlChange(midiCh, cc + i, midi_out_value); //  (channel, CC number,  CC value)
         MidiUSB.flush();
         
         //do usbMIDI.sendControlChange if using with Teensy
         #elif TEENSY
-        usbMIDI.sendControlChange(cc + i, midiPotCState[i], midiCh); // cc number, cc value, midi channel
+        usbMIDI.sendControlChange(cc + i, midi_out_value, midiCh); // cc number, cc value, midi channel
         
         #elif DEBUG
         Serial.print("Pot: ");
         Serial.print(i);
         Serial.print(" ");
-        Serial.println(midiPotCState[i]);
+        Serial.println(midi_out_value);
         #endif
 
         potPState[i] = potCState[i]; // Stores the current reading of the potentiometer to compare with the next
@@ -268,19 +270,19 @@ void joysticks() {
       if (joyXState[i] > joyUpVar || joyYState[i] > joyUpVar) { // Opens the gate if the potentiometer variation is greater than the threshold
         joyMovingUp = true;
         if (midiJoyState[i] < 123 ){
-          midiJoyState[i] += 5 ; 
+          midiJoyState[i] -= 5 ; 
         }
       }
 
       else if (joyXState[i] < joyDownVar || joyYState[i] < joyDownVar) { // Opens the gate if the potentiometer variation is greater than the threshold
           joyMovingDown = true;
           if (midiJoyState[i] > 3 ){
-            midiJoyState[i] -= 5 ; 
+            midiJoyState[i] += 5 ; 
           }
         }
 
       else {
-        midiJoyState[i] = 63 ;         
+        midiJoyState[i] = 70 ;         
       }
       
       if (joyMovingDown == true) { // If the joystick is still moving, send the change control
