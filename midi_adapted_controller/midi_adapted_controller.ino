@@ -25,7 +25,7 @@ MIDI_CREATE_INSTANCE(HardwareSerial, Serial, midiOut);
 // BUTTONS
 const int N_BUTTONS = 7; //*  total numbers of buttons
 const int BUTTON_ARDUINO_PIN[N_BUTTONS] = {6, 7, 8, 9, 10, 11, 12}; //* pins of each button connected straight to the controller
-const int LED_ARDUINO_PIN[N_BUTTONS] = {0, 1, 2, 3, 4, 5, 21}; //* pins of each led connected straight to the controller
+const int LED_ARDUINO_PIN[N_BUTTONS] = {0, 1, 2, 3, 4, 5, A7}; //* pins of each led connected straight to the controller
 
 int buttonCState[N_BUTTONS] = {};        // stores the button current value
 int buttonPState[N_BUTTONS] = {};        // stores the button previous value
@@ -97,10 +97,10 @@ void setup() {
   #endif
   
    // Buttons Initialize buttons with pull up resistors
-    for (int i = 0; i < N_BUTTONS; i++) {
+    for (int i = 0; i < N_BUTTONS ; i++) {
       pinMode(BUTTON_ARDUINO_PIN[i], INPUT_PULLUP);
     }
-    for (int i = 0; i < N_BUTTONS; i++) {
+    for (int i = 0; i < N_BUTTONS ; i++) {
       pinMode(LED_ARDUINO_PIN[i], OUTPUT);
       digitalWrite(LED_ARDUINO_PIN[i], LOW);
     }
@@ -124,6 +124,7 @@ void setup() {
 /////////////////////////////////////////////
 // LOOP
 void loop() {
+//  pauseButton();
   buttons();
   potentiometers();
   joysticks();
@@ -132,6 +133,37 @@ void loop() {
 /////////////////////////////////////////////
 
 // BUTTONS
+//void pauseButton(){
+//  buttonCState[6] = digitalRead(BUTTON_ARDUINO_PIN[7]);
+//  if ( BUTTON_ARDUINO_PIN[6] == 1){
+//     Serial.println("6: button on");
+//     
+//    for (int i = 0; i < N_POTS; i++) {
+//        // Sends the MIDI CC accordingly to the chosen board
+//        // use if using with ATmega328 (uno, mega, nano...)
+//        #ifdef ATMEGA328
+//        midiOut.sendControlChange(cc + i, 0, midiCh); // cc number, cc value, midi channel
+//        
+//        //use if using with ATmega32U4 (micro, pro micro, leonardo...)
+//        #elif ATMEGA32U4
+//        controlChange(midiCh, cc + i, 0); //  (channel, CC number,  CC value)
+//        MidiUSB.flush();
+//        
+//        //do usbMIDI.sendControlChange if using with Teensy
+//        #elif TEENSY
+//        usbMIDI.sendControlChange(cc + i, 0, midiCh); // cc number, cc value, midi channel
+//        
+//        #elif DEBUG
+//        Serial.print("Pot: ");
+//        Serial.print(i);
+//        Serial.print(" ");
+//        Serial.println(0);
+//        #endif
+//    }
+//    Serial.println("6: button off");
+//  }
+//}
+
 void buttons() {
 
   for (int i = 0; i < N_BUTTONS; i++) {
